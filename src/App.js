@@ -37,9 +37,16 @@ const App = () => {
               },
               body: JSON.stringify({ code }),
           });
-          const data = await response.json(); // Declare data here
-          setAccessToken(data.access_token);
-          console.log('Access Token:', data.access_token); // Debug: Check access token
+          if (response.status === 200) {
+            // If the response status is 200 OK, parse the JSON data
+            const data = await response.json();
+            setAccessToken(data.access_token);
+            console.log('Access Token:', data.access_token); // Debug: Check access token
+        } else {
+            // If the response status is not 200, handle the error
+            console.error('Error exchanging token:', response.statusText);
+            // You can display an error message to the user or perform other error handling here
+        }
       } catch (error) {
           console.error('Error exchanging token:', error);
       }
