@@ -1,9 +1,10 @@
-//require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors'); // Import the cors middleware
 const app = express();
 
 app.use(express.json()); // To parse JSON bodies
+app.use(cors()); // Use the cors middleware
 
 const CLIENT_ID = '9f9e746f4f604bbe9331529d75394009';
 const REDIRECT_URI = 'http://localhost:3000/callback';
@@ -43,4 +44,3 @@ app.post('/exchange-token', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
