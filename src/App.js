@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+var express = require('express');
+var request = require('request');
+var cors = require('cors');
+var querystring = require('querystring');
+var cookieParser = require('cookie-parser');
+
 const CLIENT_ID = '9f9e746f4f604bbe9331529d75394009';
+const CLIENT_SECRET = '98269e0b4df84cbba1997148f0e13c7b';
 const REDIRECT_URI = 'http://localhost:3000/callback';
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const RESPONSE_TYPE = 'code';
