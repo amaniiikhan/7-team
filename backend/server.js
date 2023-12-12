@@ -35,7 +35,7 @@ app.get('/login', function(req, res) {
     res.cookie(stateKey, state);
 
     // your application requests authorization
-    var scope = 'user-read-private user-read-email user-read-playback-state';
+    var scope = 'user-read-private user-read-email';
     res.redirect(AUTH_ENDPOINT + '?' +
     querystring.stringify({
         response_type: RESPONSE_TYPE,
@@ -54,7 +54,7 @@ app.get('/callback', function(req, res) {
     var storedState = req.cookies ? req.cookies[stateKey] : null;
 
     if (state === null || state !== storedState) {
-    res.redirect('/#' +
+    res.redirect('http://localhost:3000/#' +
         querystring.stringify({
         error: 'state_mismatch'
         }));
@@ -69,8 +69,9 @@ app.get('/callback', function(req, res) {
         grant_type: 'authorization_code'
         },
         headers: {
-        'Authorization': 'Basic ' + (new Buffer(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'))
-        },
+            'content-type': 'application/x-www-form-urlencoded',
+            Authorization: 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+          },
         json: true
     };
 
@@ -135,16 +136,5 @@ app.get('/refresh_token', function(req, res) {
     });
     });
 
-
-
-
-
-
-
-
-const PORT = process.env.PORT || 3001;
-
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+console.log('Listening on 3001');
+app.listen(3001);
