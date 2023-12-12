@@ -15,8 +15,7 @@ const getTokenFromUrl = () => {
 
 function App() {
     const [spotifyToken, setSpotifyToken] = useState("");
-    const [topTracks, setTopTracks] = useState({})
-    const [topArtists, setTopArtists] = useState({})
+    const [topTracks, setTopTracks] = useState([]);
     const [loggedIn, setLoggedIn] = useState(false)
 
     useEffect(() => {
@@ -36,22 +35,42 @@ function App() {
         }
     })
 
-    const getTopTracks = () => {
-        spotifyApi.getMyTopTracks().then((response) => {
-            console.log("This is the response from getMyTopTracks: ", response)
-            setTopTracks(response)
-        })
-    }
+    const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks`
 
-    return (<div className="App">
-        {!loggedIn && 
-        <a href="http://localhost:3001/login"> Login to Spotify </a>}
-        {loggedIn && (<> 
-        <div>Top Tracks: {topTracks}</div>
-        </>)}
-        {loggedIn && <button onClick={getTopTracks()}>Get Top Tracks</button>}
-    </div>);
+     const getTopTracks = async () => {
 
+        return fetch(TOP_TRACKS_ENDPOINT, {
+    headers: {
+      Authorization: `Bearer ${spotifyToken}`,
+    },
+  })
+}
+
+    useEffect(() => {
+        if (loggedIn) {
+            getTopTracks();
         }
-    
-        export default App;
+    }, [loggedIn]);
+
+    return (
+        <div className="App">
+            {!loggedIn && 
+                <a href="http://localhost:3001/login">Login to Spotify</a>
+            }
+            {loggedIn && (
+                <div>
+                    <h2>Top Tracks</h2>
+                    <ul>
+                        {topTracks.map((track, index) => (
+                            <li key={index}>
+                                {track.name} by {track.artists.map(artist => artist.name).join(", ")}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default App;

@@ -35,7 +35,7 @@ app.get('/login', function(req, res) {
     res.cookie(stateKey, state);
 
     // your application requests authorization
-    var scope = 'user-read-private user-read-email';
+    var scope = 'user-read-private user-read-email user-top-read';
     res.redirect(AUTH_ENDPOINT + '?' +
     querystring.stringify({
         response_type: RESPONSE_TYPE,
