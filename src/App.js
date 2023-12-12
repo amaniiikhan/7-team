@@ -8,14 +8,13 @@ const getTokenFromUrl = () => {
     return window.location.hash.substring(1).split('&').reduce((initial, item) => {
         let parts = item.split('=');
         initial[parts[0]] = decodeURIComponent(parts[1]);
-
         return initial;
     },{}); 
 };
 
 function App() {
     const [spotifyToken, setSpotifyToken] = useState("");
-    const [topTracks, setTopTracks] = useState([]);
+    const [topTracks, setTopTracks] = useState([])
     const [loggedIn, setLoggedIn] = useState(false)
 
     useEffect(() => {
@@ -35,16 +34,12 @@ function App() {
         }
     })
 
-    const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks`
-
-     const getTopTracks = async () => {
-
-        return fetch(TOP_TRACKS_ENDPOINT, {
-    headers: {
-      Authorization: `Bearer ${spotifyToken}`,
-    },
-  })
-}
+    const getTopTracks = () => {
+        spotifyApi.getMyTopTracks().then((response) => {
+            console.log("This is our top tracks response: ", response)
+            setTopTracks(response.items)
+        })
+    }
 
     useEffect(() => {
         if (loggedIn) {
