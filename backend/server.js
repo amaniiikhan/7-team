@@ -28,7 +28,7 @@ app.post('/exchange-token', async (req, res) => {
                 code: code,
                 redirect_uri: REDIRECT_URI,
                 client_id: CLIENT_ID,
-                client_secret: CLIENT_SECRET
+                client_secret: CLIENT_SECRET 
             }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
