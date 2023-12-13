@@ -1,8 +1,10 @@
-//require('dotenv').config();
+const dotenv = require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const app = express();
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json()); // To parse JSON bodies
 
 const CLIENT_ID = '9f9e746f4f604bbe9331529d75394009';
@@ -24,9 +26,9 @@ app.post('/exchange-token', async (req, res) => {
             data: new URLSearchParams({
                 grant_type: 'authorization_code',
                 code: code,
-                redirect_uri: process.env.REDIRECT_URI,
-                client_id: process.env.CLIENT_ID,
-                client_secret: process.env.CLIENT_SECRET
+                redirect_uri: REDIRECT_URI,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET
             }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -40,6 +42,5 @@ app.post('/exchange-token', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+console.log('Listening on 3001');
+app.listen(3001);

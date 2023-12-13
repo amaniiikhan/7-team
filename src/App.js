@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import SpotifyWebApi from 'spotify-web-api-js';
+
 
 const CLIENT_ID = '9f9e746f4f604bbe9331529d75394009';
 const REDIRECT_URI = 'http://localhost:3000/callback';
@@ -52,25 +54,17 @@ const App = () => {
 
 
   const fetchTopTracks = async () => {
-    try {
-        const response = await fetch('https://api.spotify.com/v1/me/top/tracks', {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
-        const data = await response.json();
-        console.log('Top Tracks Response:', data); // Debug: Check the response
-
-        if (data && data.items) {
-            setTopTracks(data.items);
-            console.log('Top Tracks Data:', data.items); // Debug: Check the data items
-        } else {
-            console.log('No items found in response'); // Debug: No items in response
+        try {
+            const spotifyApi = new SpotifyWebApi();
+            spotifyApi.setAccessToken(accessToken);
+            const response = await spotifyApi.getMyTopTracks({ limit: 10 });
+            setTopTracks(response.items);
+        } catch (error) {
+            console.error('Error fetching top tracks:', error);
         }
-    } catch (error) {
-        console.error('Error fetching top tracks:', error);
-    }
 };
+
+
 
 
     const handleInputChange = (e) => {
