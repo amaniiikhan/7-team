@@ -5,7 +5,10 @@ import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi();
 
 const getTokenFromUrl = () => {
-    return window.location.hash.substring(1).split('&').reduce((initial, item) => {
+    return window.location.hash
+    .substring(1)
+    .split('&')
+    .reduce((initial, item) => {
         let parts = item.split('=');
         initial[parts[0]] = decodeURIComponent(parts[1]);
         return initial;
@@ -18,8 +21,9 @@ function App() {
     const [loggedIn, setLoggedIn] = useState(false)
 
     useEffect(() => {
-        console.log("This is what we derived from the URL: ", getTokenFromUrl())
-        const spotifyToken = getTokenFromUrl().access_token
+        const tokenInfo = getTokenFromUrl();
+        console.log("This is what we derived from the URL: ", tokenInfo);
+        const spotifyToken = tokenInfo.access_token;
         window.location.hash = "";
         console.log("This is our spotify token:", spotifyToken);
 
@@ -54,6 +58,7 @@ function App() {
             }
             {loggedIn && (
                 <div>
+                    <a href="http://localhost:3001/login">Login to Spotify</a>
                     <h2>Top Tracks</h2>
                     <ul>
                         {topTracks.map((track, index) => (
