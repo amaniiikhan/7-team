@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import SpotifyWebApi from 'spotify-web-api-js';
 
+const SpotifyApi = new SpotifyWebApi();
 
 const CLIENT_ID = '9f9e746f4f604bbe9331529d75394009';
 const REDIRECT_URI = 'http://localhost:3000/callback';
@@ -12,7 +13,7 @@ const RESPONSE_TYPE = 'code';
 const App = () => {
     const [code, setCode] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
-    const [topTracks, setTopTracks] = useState([]);
+    const [TopTracks, setTopTracks] = useState([]);
 
     const [signupData, setSignupData] = useState({
       username: '',
@@ -42,6 +43,7 @@ const App = () => {
           const data = await response.json(); // Declare data here
           setAccessToken(data.access_token);
           console.log('Access Token:', data.access_token); // Debug: Check access token
+          SpotifyApi.setAccessToken(data.access_token);
       } catch (error) {
           console.error('Error exchanging token:', error);
       }
@@ -55,10 +57,10 @@ const App = () => {
 
   const fetchTopTracks = async () => {
         try {
-            const spotifyApi = new SpotifyWebApi();
-            spotifyApi.setAccessToken(accessToken);
-            const response = await spotifyApi.getMyTopTracks({ limit: 10 });
-            setTopTracks(response.items);
+            SpotifyApi.getMyTopTracks().then((response) => { 
+                console.log(response)
+                setTopTracks(response.items);
+            })
         } catch (error) {
             console.error('Error fetching top tracks:', error);
         }
@@ -133,7 +135,7 @@ const App = () => {
     <div>
         <h2>Top Tracks</h2>
         <ul>
-            {topTracks.map((track, index) => (
+            {TopTracks.map((track, index) => (
                 <li key={index}>{track.name} by {track.artists.map(artist => artist.name).join(", ")}</li>
             ))}
         </ul>
